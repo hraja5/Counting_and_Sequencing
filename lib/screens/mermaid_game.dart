@@ -7,7 +7,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:video_player/video_player.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_tts/flutter_tts.dart';
-import 'package:counting_and_sequencing/screens/mermaid_progress_screen.dart';
 
 import 'package:provider/provider.dart';
 import 'package:counting_and_sequencing/utils/language_controller.dart';
@@ -434,25 +433,7 @@ class _ShellCountingGameState extends State<ShellCountingGame> {
                     ),
                     const SizedBox(height: 16),
                     const LanguageToggleButton(),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => const ProgressScreen()),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        foregroundColor: Colors.indigo,
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 30, vertical: 10),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                      ),
-                      child: const Text("View My Progress"),
-                    ),
+                   
                     const SizedBox(height: 10),
 
                     const SizedBox(height: 32),

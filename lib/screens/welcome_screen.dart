@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'dart:math' as math;
 import 'home.dart';
-import 'login_screen.dart';
-import 'signup_screen.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -17,12 +15,11 @@ class _WelcomeScreenState extends State<WelcomeScreen>
   late AnimationController _controller;
   late List<Offset> _randomOffsets;
 
-
   static Offset _generateRandomOffset() {
     final random = math.Random();
     return Offset(
-      (random.nextDouble() * 2 - 1) * 2.0, // Reduced range
-      (random.nextDouble() * 2 - 1) * 2.4, // Reduced range
+      (random.nextDouble() * 2 - 1) * 2.0,
+      (random.nextDouble() * 2 - 1) * 2.4,
     );
   }
 
@@ -45,7 +42,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
-    final borderColor = Colors.white.withOpacity(0.5); // Define border color
+    final borderColor = Colors.white.withOpacity(0.5);
 
     return Scaffold(
       body: Container(
@@ -59,7 +56,6 @@ class _WelcomeScreenState extends State<WelcomeScreen>
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Container(
-            // Add container for the animated border
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(24),
               border: Border.all(
@@ -86,23 +82,18 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                     borderRadius: BorderRadius.circular(16),
                     child: Stack(
                       children: [
-                        // Animated logos
                         AnimatedBuilder(
                           animation: _controller,
                           builder: (_, child) {
                             return Stack(
                               children: [
-                                // Main logo
                                 Positioned(
-                                  left: screenSize.width / 2 -
-                                      140, // Adjusted position
-                                  top: screenSize.height / 4 -
-                                      140, // Adjusted position
+                                  left: screenSize.width / 2 - 140,
+                                  top: screenSize.height / 4 - 140,
                                   child: Container(
                                     padding: const EdgeInsets.all(8),
                                     decoration: BoxDecoration(
-                                      color: Colors.white
-                                          .withOpacity(0.1), // Less opaque
+                                      color: Colors.white.withOpacity(0.1),
                                       borderRadius: BorderRadius.circular(140),
                                       border: Border.all(
                                           color: Colors.white.withOpacity(0.3),
@@ -110,46 +101,42 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                                     ),
                                     child: Image.asset(
                                       'assets/seahorse-2.png',
-                                      width: 280, // Adjusted size
-                                      height: 280, // Adjusted size
+                                      width: 280,
+                                      height: 280,
                                     ),
                                   ),
                                 ),
-                                // Random moving logos
                                 ..._randomOffsets.map((offset) {
                                   final currentOffset = Offset(
                                     screenSize.width *
                                         (0.5 +
                                             offset.dx *
-                                                0.3 * // Reduced range
+                                                0.3 *
                                                 math.sin(_controller.value *
                                                     2 *
                                                     math.pi)),
                                     screenSize.height *
-                                        (0.3 + // Adjusted position
+                                        (0.3 +
                                             offset.dy *
-                                                0.3 * // Reduced range
+                                                0.3 *
                                                 math.cos(_controller.value *
                                                     2 *
                                                     math.pi)),
                                   );
                                   return Positioned(
-                                    left:
-                                        currentOffset.dx - 60, // Adjusted size
-                                    top: currentOffset.dy - 60, // Adjusted size
+                                    left: currentOffset.dx - 60,
+                                    top: currentOffset.dy - 60,
                                     child: Container(
                                       padding: const EdgeInsets.all(4),
                                       decoration: BoxDecoration(
-                                        color: Colors.white.withOpacity(
-                                            0.05), // Reduced opacity
+                                        color: Colors.white.withOpacity(0.05),
                                         borderRadius: BorderRadius.circular(60),
                                       ),
                                       child: Image.asset(
                                         'assets/jelly.png',
-                                        width: 120, // Adjusted size
-                                        height: 120, // Adjusted size
-                                        color: Colors.white.withOpacity(
-                                            0.5), // Reduced opacity
+                                        width: 120,
+                                        height: 120,
+                                        color: Colors.white.withOpacity(0.5),
                                       ),
                                     ),
                                   );
@@ -158,7 +145,6 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                             );
                           },
                         ),
-                        // Buttons - Move buttons out of the AnimatedBuilder
                       ],
                     ),
                   ),
@@ -169,7 +155,6 @@ class _WelcomeScreenState extends State<WelcomeScreen>
         ),
       ),
       bottomNavigationBar: Container(
-        // Use bottomNavigationBar for the button section
         decoration: BoxDecoration(
           color: Colors.white.withOpacity(0.9),
           borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
@@ -188,14 +173,14 @@ class _WelcomeScreenState extends State<WelcomeScreen>
             Text(
               'Counting & Sequencing',
               style: TextStyle(
-                fontSize: 24, // Adjusted size
+                fontSize: 24,
                 fontWeight: FontWeight.bold,
                 color: Colors.purple[700],
                 shadows: [
                   Shadow(
-                    blurRadius: 8, // Adjusted blurRadius
-                    color: Colors.purple.withOpacity(0.2), // Adjusted opacity
-                    offset: const Offset(1, 1), // Adjusted offset
+                    blurRadius: 8,
+                    color: Colors.purple.withOpacity(0.2),
+                    offset: const Offset(1, 1),
                   ),
                 ],
               ),
@@ -204,44 +189,26 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                 .fadeIn(duration: 600.ms, delay: 300.ms)
                 .shimmer(
                   duration: 1200.ms,
-                  color: Colors.white.withOpacity(0.3), // Adjusted opacity
+                  color: Colors.white.withOpacity(0.3),
                 )
                 .then()
                 .shake(
-                  hz: 2, // Reduced hz
+                  hz: 2,
                   curve: Curves.easeInOut,
                 )
                 .then(delay: 400.ms)
                 .slideY(
-                  begin: 0.1, // Reduced begin
+                  begin: 0.1,
                   curve: Curves.easeInOut,
                 ),
-            const SizedBox(height: 16), // Adjusted height
+            const SizedBox(height: 16),
             _buildButton(
               context,
               text: "Play Now!",
-              color: Colors.green.shade400, // Less vibrant
+              color: Colors.green.shade400,
               icon: Icons.play_arrow,
               onPressed: () => Navigator.push(context,
                   MaterialPageRoute(builder: (_) => const MyHomeScreen())),
-            ),
-            const SizedBox(height: 8), // Adjusted height
-            _buildButton(
-              context,
-              text: "Login",
-              color: Colors.blue.shade400, // Less vibrant
-              icon: Icons.login,
-              onPressed: () => Navigator.push(context,
-                  MaterialPageRoute(builder: (_) => const LoginPage())),
-            ),
-            const SizedBox(height: 8), // Adjusted height
-            _buildButton(
-              context,
-              text: "Sign Up",
-              color: Colors.orange.shade400, // Less vibrant
-              icon: Icons.person_add,
-              onPressed: () => Navigator.push(context,
-                  MaterialPageRoute(builder: (_) => const SignUpPage())),
             ),
           ],
         ),
@@ -258,45 +225,38 @@ class _WelcomeScreenState extends State<WelcomeScreen>
       effects: [SlideEffect(duration: 0.5.seconds)],
       child: Container(
         width: double.infinity,
-        height: 50, // Adjusted height
-        margin: const EdgeInsets.symmetric(vertical: 4), // Adjusted margin
+        height: 50,
+        margin: const EdgeInsets.symmetric(vertical: 4),
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [
-              color.withOpacity(0.6),
-              color.withOpacity(0.8)
-            ], // Less vibrant
+            colors: [color.withOpacity(0.6), color.withOpacity(0.8)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
-          borderRadius: BorderRadius.circular(24), // Adjusted size
+          borderRadius: BorderRadius.circular(24),
           boxShadow: [
             BoxShadow(
-              color: color.withOpacity(0.2), // Reduced opacity
-              blurRadius: 6, // Adjusted blurRadius
-              offset: const Offset(0, 3), // Adjusted offset
+              color: color.withOpacity(0.2),
+              blurRadius: 6,
+              offset: const Offset(0, 3),
             ),
           ],
         ),
         child: ElevatedButton.icon(
-          icon: Icon(
-            icon,
-            color: Colors.white,
-            size: 20,
-          ), // Adjusted size
+          icon: Icon(icon, color: Colors.white, size: 20),
           label: Text(
             text,
-            style: const TextStyle(
-                fontSize: 16, fontWeight: FontWeight.bold), // Adjusted size
+            style:
+                const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           onPressed: onPressed,
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.transparent,
             foregroundColor: Colors.white,
             elevation: 0,
-            padding: EdgeInsets.symmetric(vertical: 12), // Adjusted padding
+            padding: const EdgeInsets.symmetric(vertical: 12),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(24), // Adjusted size
+              borderRadius: BorderRadius.circular(24),
             ),
           ),
         ),
