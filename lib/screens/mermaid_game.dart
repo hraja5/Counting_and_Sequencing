@@ -11,7 +11,7 @@ import 'package:flutter_tts/flutter_tts.dart';
 import 'package:provider/provider.dart';
 import 'package:counting_and_sequencing/utils/language_controller.dart';
 import 'package:counting_and_sequencing/utils/auth_service.dart';
-// import 'package:counting_and_sequencing/analytics_engine.dart';
+import 'package:counting_and_sequencing/analytics_engine.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:counting_and_sequencing/widgets/language_toggle_button.dart';
 
@@ -433,7 +433,7 @@ class _ShellCountingGameState extends State<ShellCountingGame> {
                     ),
                     const SizedBox(height: 16),
                     const LanguageToggleButton(),
-                   
+
                     const SizedBox(height: 10),
 
                     const SizedBox(height: 32),

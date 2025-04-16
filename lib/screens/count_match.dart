@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:counting_and_sequencing/analytics_engine.dart';
 import 'eightpage.dart';
 import 'sixpage.dart';
 
@@ -8,7 +9,8 @@ class CountMatch extends StatefulWidget {
 
   @override
   State<CountMatch> createState() => _CountMatchPageState();
-  }
+}
+
 class _CountMatchPageState extends State<CountMatch> {
   bool showSpanish = false;
   FlutterTts flutterTts = FlutterTts();
@@ -64,6 +66,9 @@ class _CountMatchPageState extends State<CountMatch> {
                       String text = showSpanish
                           ? 'Veamos cuántas naranjas tenemos'
                           : 'Let\'s see how many oranges we have';
+                      AnalyticsEngine.logAudioButtonClick(
+                          showSpanish ? 'Spanish' : 'English', 'CountMatch');
+
                       await flutterTts.setLanguage('es-ES');
                       await flutterTts.speak(text);
                     },
@@ -75,8 +80,8 @@ class _CountMatchPageState extends State<CountMatch> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.purple,
                       foregroundColor: Colors.white,
-                      padding:
-                      const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 15, horizontal: 20),
                     ),
                   ),
                 ),
@@ -110,7 +115,8 @@ class _CountMatchPageState extends State<CountMatch> {
                     ),
                     child: Text(
                       showSpanish ? 'OCHO' : 'Eight',
-                      style: const TextStyle(fontSize: 30.0, color: Colors.black),
+                      style:
+                          const TextStyle(fontSize: 30.0, color: Colors.black),
                     ),
                   ),
                 ),
@@ -130,7 +136,8 @@ class _CountMatchPageState extends State<CountMatch> {
                     ),
                     child: Text(
                       showSpanish ? 'SEIS' : 'Six',
-                      style: const TextStyle(fontSize: 30.0, color: Colors.black),
+                      style:
+                          const TextStyle(fontSize: 30.0, color: Colors.black),
                     ),
                   ),
                 ),
@@ -143,6 +150,8 @@ class _CountMatchPageState extends State<CountMatch> {
                       setState(() {
                         showSpanish = !showSpanish;
                       });
+                      final newLang = showSpanish ? 'Spanish' : 'English';
+                      AnalyticsEngine.logLanguageToggle(newLang);
                     },
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(

@@ -1,3 +1,4 @@
+import 'package:counting_and_sequencing/analytics_engine.dart';
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import '../utils/number_generator.dart';
@@ -111,6 +112,8 @@ class _OneToTenPageState extends State<OneToTenPage> {
                     setState(() {
                       showSpanish = !showSpanish;
                     });
+                    final selectedLang = showSpanish ? 'Spanish' : 'English';
+                    AnalyticsEngine.logLanguageToggle(selectedLang);
                   },
                   child: Text(
                     showSpanish ? 'English' : 'Español',

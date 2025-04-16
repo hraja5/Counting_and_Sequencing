@@ -1,3 +1,4 @@
+import 'package:counting_and_sequencing/analytics_engine.dart';
 import 'package:flutter/material.dart';
 import '../utils/number_generator_1.dart';
 import '../widgets/number_option_button.dart';
@@ -101,6 +102,8 @@ class _EvenNumbersPageState extends State<EvenNumbersPage> {
                     setState(() {
                       showSpanish = !showSpanish;
                     });
+                    final selectedLang = showSpanish ? 'Spanish' : 'English';
+                    AnalyticsEngine.logLanguageToggle(selectedLang);
                   },
                   child: Text(showSpanish ? 'English' : 'Español',
                       style: const TextStyle(fontSize: 23)),

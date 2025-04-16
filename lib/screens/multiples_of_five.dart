@@ -1,3 +1,4 @@
+import 'package:counting_and_sequencing/analytics_engine.dart';
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import '../utils/number_generator_3.dart';
@@ -84,31 +85,31 @@ class _MultiplesOfFivePageState extends State<MultiplesOfFive> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                ...options
-                    .map((option) => NumberOptionButton(
-                          text: showSpanish
-                              ? NumberGenerator3.convertToSpanish(option)
-                              : option,
-                          onPressed: () {
-                            setState(() {
-                              playSound('audio/game-correct.mp3');
-                              if (option == correctOption) {
-                                score += 10;
-                              } else {
-                                playSound('audio/game-wrong.mp3');
-                                score -= 5;
-                              }
-                            });
-                            navigate(context, option == correctOption);
-                          },
-                        ))
-                    ,
+                ...options.map((option) => NumberOptionButton(
+                      text: showSpanish
+                          ? NumberGenerator3.convertToSpanish(option)
+                          : option,
+                      onPressed: () {
+                        setState(() {
+                          playSound('audio/game-correct.mp3');
+                          if (option == correctOption) {
+                            score += 10;
+                          } else {
+                            playSound('audio/game-wrong.mp3');
+                            score -= 5;
+                          }
+                        });
+                        navigate(context, option == correctOption);
+                      },
+                    )),
                 const SizedBox(height: 32),
                 ElevatedButton(
                   onPressed: () {
                     setState(() {
                       showSpanish = !showSpanish;
                     });
+                    final selectedLang = showSpanish ? 'Spanish' : 'English';
+                    AnalyticsEngine.logLanguageToggle(selectedLang);
                   },
                   child: Text(showSpanish ? 'English' : 'Español',
                       style: const TextStyle(fontSize: 23)),

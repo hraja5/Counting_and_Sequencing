@@ -5,6 +5,7 @@ import 'one_to_ten_page.dart';
 import 'multiples_of_five.dart';
 import 'multiples_of_ten.dart';
 import '../widgets/exit_button.dart';
+import 'package:counting_and_sequencing/analytics_engine.dart';
 
 class SequencingPage extends StatelessWidget {
   const SequencingPage({super.key});

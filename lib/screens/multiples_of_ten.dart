@@ -1,3 +1,4 @@
+import 'package:counting_and_sequencing/analytics_engine.dart';
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'right_answer.dart';
@@ -9,7 +10,8 @@ import '../widgets/number_option_button.dart';
 class MultiplesOfTen extends StatefulWidget {
   final int initialScore;
 
-  const MultiplesOfTen({super.key, this.initialScore = 0}); // Default score is 0 if not provided
+  const MultiplesOfTen(
+      {super.key, this.initialScore = 0}); // Default score is 0 if not provided
 
   @override
   _MultiplesOfTenPageState createState() => _MultiplesOfTenPageState();
@@ -109,6 +111,8 @@ class _MultiplesOfTenPageState extends State<MultiplesOfTen> {
                     setState(() {
                       showSpanish = !showSpanish;
                     });
+                    final selectedLang = showSpanish ? 'Spanish' : 'English';
+                    AnalyticsEngine.logLanguageToggle(selectedLang);
                   },
                   child: Text(showSpanish ? 'English' : 'Español',
                       style: const TextStyle(fontSize: 23)),

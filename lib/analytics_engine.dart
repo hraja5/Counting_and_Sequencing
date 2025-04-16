@@ -7,58 +7,82 @@ class AnalyticsEngine {
     await FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(true);
   }
 
-  // Log which game is selected from the home screen
-  static Future<void> logGameSelected(String gameName) async {
+  // Log when a game is selected (e.g., from home or game screen)
+  static void logGameSelected(String gameName) async {
     print('Game selected: $gameName');
     await instance.logEvent(
       name: 'game_selected',
-      parameters: {'game_name': gameName},
+      parameters: <String, Object>{
+        'game_name': gameName,
+      },
     );
   }
 
-  // Log language toggle
-  static Future<void> logLanguageToggle(String newLanguage) async {
-    print('Language toggled to: $newLanguage');
+  // Log when language is toggled
+  static void logLanguageToggle(String language) async {
+    print('Language toggled to: $language');
     await instance.logEvent(
       name: 'language_toggle',
-      parameters: {'language': newLanguage},
+      parameters: <String, Object>{
+        'language': language,
+      },
     );
   }
 
   // Log when a shell is tapped in the Mermaid Game
-  static Future<void> logShellTapped(int shellIndex, bool correct) async {
-    print('Shell tapped: $shellIndex, Correct: $correct');
+  static void logShellTapped(int shellIndex, bool isCorrect) async {
+    print('Shell tapped: $shellIndex, Correct: $isCorrect');
     await instance.logEvent(
       name: 'shell_tap',
-      parameters: {
+      parameters: <String, Object>{
         'shell_index': shellIndex,
-        'is_correct': correct,
+        'is_correct': isCorrect,
       },
     );
   }
 
-  // Log when a level is completed or failed
-  static Future<void> logLevelResult({
-    required int level,
-    required int score,
-    required bool completed,
-  }) async {
-    print('Level result - Level: $level, Score: $score, Completed: $completed');
+  // Log when an audio button is clicked (if speech synthesis is used)
+  static void logAudioButtonClick(String language, String game) async {
+    print('$game - Audio button clicked for language: $language');
     await instance.logEvent(
-      name: 'level_result',
-      parameters: {
-        'level': level,
-        'score': score,
-        'completed': completed,
+      name: 'audio_button_click',
+      parameters: <String, Object>{
+        'language': language,
+        'game': game,
       },
     );
   }
 
-  // Log progress view tapped
-  static Future<void> logViewProgressTapped() async {
-    print('Progress view opened');
+  // Navigation in Count Match game (to EightPage or SixPage)
+  static void logCountMatchNavigation(String destinationPage) async {
+    print('CountMatch - Navigated to $destinationPage');
     await instance.logEvent(
-      name: 'view_progress',
+      name: 'count_match_nav',
+      parameters: <String, Object>{
+        'destination': destinationPage,
+      },
+    );
+  }
+
+  // Navigation in CountMatchDemo game (to FivePage or TwoPage)
+  static void logDemoMatchNavigation(String destinationPage) async {
+    print('CountMatchDemo - Navigated to $destinationPage');
+    await instance.logEvent(
+      name: 'demo_match_nav',
+      parameters: <String, Object>{
+        'destination': destinationPage,
+      },
+    );
+  }
+
+  // Sequence game option selected
+  static void logSequenceGameOption(String optionName) async {
+    print('Sequence Game - Option selected: $optionName');
+    await instance.logEvent(
+      name: 'sequence_option_selected',
+      parameters: <String, Object>{
+        'option': optionName,
+      },
     );
   }
 }
