@@ -7,8 +7,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:video_player/video_player.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_tts/flutter_tts.dart';
-
 import 'package:provider/provider.dart';
+
 import 'package:counting_and_sequencing/utils/language_controller.dart';
 import 'package:counting_and_sequencing/utils/auth_service.dart';
 import 'package:counting_and_sequencing/analytics_engine.dart';
@@ -32,13 +32,13 @@ class _ShellCountingGameState extends State<ShellCountingGame> {
   late VideoPlayerController _videoController;
   late AudioPlayer _audioPlayer;
   late FlutterTts _flutterTts;
+  late LanguageController _languageController;
   Queue<int> ttsQueue = Queue<int>();
   bool isSpeaking = false;
   bool isProcessingAnswer = false;
   bool isAnimating = false;
-  int _mermaidCurrentPosition = 1; // Start mermaid on the first shell
+  int _mermaidCurrentPosition = 1;
   List<int> _pathToTarget = [];
-  late LanguageController _languageController;
 
   @override
   void initState() {
@@ -47,15 +47,12 @@ class _ShellCountingGameState extends State<ShellCountingGame> {
     _initializeVideoPlayer();
     _initializeAudioPlayer();
     _initializeTTS();
-    _generateNewQuestion();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _languageController =
-          Provider.of<LanguageController>(context, listen: false);
+      _languageController = Provider.of<LanguageController>(context, listen: false);
       _languageController.addListener(_updateQuestion);
-      if (_languageController != null) {
-        _updateQuestion();
-      }
+      _generateNewQuestion(); // ✅ Call here only after controller is set
+      _updateQuestion();
     });
   }
 
@@ -69,7 +66,7 @@ class _ShellCountingGameState extends State<ShellCountingGame> {
   }
 
   void _updateQuestion() {
-    if (_languageController == null) return;
+    if (!mounted) return;
     setState(() {
       question = _languageController
           .translate('find_shell')
@@ -138,7 +135,6 @@ class _ShellCountingGameState extends State<ShellCountingGame> {
   void _initializeAudioPlayer() {
     _audioPlayer = AudioPlayer();
     _audioPlayer.setReleaseMode(ReleaseMode.loop);
-
     _audioPlayer.play(AssetSource('audio/ocea.mp3')).then((_) {
       Future.delayed(const Duration(milliseconds: 100), () {
         _audioPlayer.setVolume(0.1);
@@ -152,8 +148,7 @@ class _ShellCountingGameState extends State<ShellCountingGame> {
     int gridSize = level + 2;
     int totalShells = gridSize * gridSize;
     targetIndex = Random().nextInt(totalShells) + 1;
-    final languageController =
-        Provider.of<LanguageController>(context, listen: false);
+
     WidgetsBinding.instance.addPostFrameCallback((_) => _updateQuestion());
 
     seahorsePosition = -1;
@@ -185,12 +180,6 @@ class _ShellCountingGameState extends State<ShellCountingGame> {
             TextButton(
               child: Text(languageController.translate("OK")),
               onPressed: () async {
-                // AnalyticsEngine.logLevelResult(
-                //   level: level,
-                //   score: score,
-                //   completed: gameFinished,
-                // );
-
                 Navigator.of(context).pop();
                 setState(() {
                   isAnimating = false;
@@ -210,7 +199,6 @@ class _ShellCountingGameState extends State<ShellCountingGame> {
                   isProcessingAnswer = false;
                 });
 
-                // ✅ Save progress to Firestore
                 final currentUser = AuthService().currentUser;
                 if (currentUser != null) {
                   await FirebaseFirestore.instance
@@ -222,7 +210,6 @@ class _ShellCountingGameState extends State<ShellCountingGame> {
                   }, SetOptions(merge: true));
                 }
 
-                // ✅ Only generate new question if game isn't finished
                 if (!gameFinished) {
                   _generateNewQuestion();
                 }
@@ -239,8 +226,6 @@ class _ShellCountingGameState extends State<ShellCountingGame> {
 
     setState(() {
       isProcessingAnswer = true;
-      // AnalyticsEngine.logShellTapped(index, index == targetIndex);
-
       isAnimating = true;
 
       if (_mermaidCurrentPosition == index) {
@@ -317,16 +302,13 @@ class _ShellCountingGameState extends State<ShellCountingGame> {
     return Consumer<LanguageController>(
       builder: (context, languageController, child) {
         return Scaffold(
-          backgroundColor: const Color(0xFF101828), // Dark background
+          backgroundColor: const Color(0xFF101828),
           appBar: AppBar(
             backgroundColor: const Color(0xFF1D2333),
-            title: Text(
-              languageController.translate('Shell Game - Level $level'),
-            ),
+            title: Text(languageController.translate('Shell Game - Level $level')),
           ),
           body: Stack(
             children: [
-              // Full-screen video background (cover)
               if (_videoController.value.isInitialized)
                 Positioned.fill(
                   child: FittedBox(
@@ -338,18 +320,13 @@ class _ShellCountingGameState extends State<ShellCountingGame> {
                     ),
                   ),
                 ),
-
-              // Main content on top
               SingleChildScrollView(
                 child: Column(
                   children: [
                     const SizedBox(height: 16),
                     Text(
                       languageController.translate(question),
-                      style: const TextStyle(
-                        fontSize: 20,
-                        color: Colors.white,
-                      ),
+                      style: const TextStyle(fontSize: 20, color: Colors.white),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 8),
@@ -358,20 +335,13 @@ class _ShellCountingGameState extends State<ShellCountingGame> {
                       style: const TextStyle(fontSize: 16, color: Colors.white),
                     ),
                     const SizedBox(height: 16),
-
-                    // Constrain the width of the grid so it doesn't stretch too wide on large screens
                     Center(
                       child: ConstrainedBox(
-                        constraints: const BoxConstraints(
-                          maxWidth: 600, // pick a max that works well
-                        ),
+                        constraints: const BoxConstraints(maxWidth: 600),
                         child: GridView.builder(
-                          // Use shrinkWrap and no scrolling here,
-                          // because we are in a SingleChildScrollView
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
+                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: gridSize,
                             crossAxisSpacing: 8,
                             mainAxisSpacing: 8,
@@ -380,47 +350,35 @@ class _ShellCountingGameState extends State<ShellCountingGame> {
                           itemBuilder: (context, index) {
                             final cellNumber = index + 1;
                             return AspectRatio(
-                              aspectRatio: 1.0, // Force each cell to be square
+                              aspectRatio: 1.0,
                               child: GestureDetector(
                                 onTap: isProcessingAnswer
                                     ? null
                                     : () => _onShellTap(cellNumber),
                                 child: Stack(
                                   children: [
-                                    // Shell image
                                     Positioned.fill(
-                                      child: SvgPicture.asset(
-                                        'assets/shell.svg',
-                                      ),
+                                      child: SvgPicture.asset('assets/shell.svg'),
                                     ),
-                                    // Seahorse if correct
                                     if (seahorsePosition == cellNumber)
                                       Positioned.fill(
                                         child: Align(
                                           alignment: Alignment.center,
-                                          child: SvgPicture.asset(
-                                            'assets/seahorse.svg',
-                                          ),
+                                          child: SvgPicture.asset('assets/seahorse.svg'),
                                         ),
                                       ),
-                                    // Shark if wrong
                                     if (sharkPosition == cellNumber)
                                       Positioned.fill(
                                         child: Align(
                                           alignment: Alignment.center,
-                                          child: SvgPicture.asset(
-                                            'assets/shark.svg',
-                                          ),
+                                          child: SvgPicture.asset('assets/shark.svg'),
                                         ),
                                       ),
-                                    // Mermaid if in that cell
                                     if (_mermaidCurrentPosition == cellNumber)
                                       Positioned.fill(
                                         child: Align(
                                           alignment: Alignment.center,
-                                          child: SvgPicture.asset(
-                                            'assets/mermaid.svg',
-                                          ),
+                                          child: SvgPicture.asset('assets/mermaid.svg'),
                                         ),
                                       ),
                                   ],
@@ -433,9 +391,7 @@ class _ShellCountingGameState extends State<ShellCountingGame> {
                     ),
                     const SizedBox(height: 16),
                     const LanguageToggleButton(),
-
                     const SizedBox(height: 10),
-
                     const SizedBox(height: 32),
                   ],
                 ),
