@@ -7,19 +7,29 @@ import 'count_match.dart';
 import 'sequence.dart';
 import 'demo_game.dart';
 
+// class MyHomeScreen extends StatelessWidget {
+//   const MyHomeScreen({super.key});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       debugShowCheckedModeBanner: false,
+//       theme: ThemeData.dark().copyWith(
+//         scaffoldBackgroundColor: const Color.fromARGB(255, 18, 32, 47),
+//       ),
+//       home: const Scaffold(
+//         body: MyHomePage(),
+//       ),
+//     );
+//   }
+// }
 class MyHomeScreen extends StatelessWidget {
   const MyHomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData.dark().copyWith(
-        scaffoldBackgroundColor: const Color.fromARGB(255, 18, 32, 47),
-      ),
-      home: const Scaffold(
-        body: MyHomePage(),
-      ),
+    return const Scaffold(
+      body: MyHomePage(),
     );
   }
 }
@@ -79,7 +89,6 @@ class _MyHomePageState extends State<MyHomePage> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                
                 const SizedBox(height: 30),
                 ElevatedButton(
                   onPressed: () {

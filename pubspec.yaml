@@ -30,7 +30,11 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
+    - assets/ocean-wave.svg
     - assets/p5.gif
+    - assets/numbers.png
+    - assets/jellyfish.png
+    - assets/sequence.png
     - assets/grapes.png
     - assets/greenAnt.png
     - assets/oranges.png
@@ -47,3 +51,4 @@ flutter:
     - assets/audio/ocea.mp3
     - assets/seahorse-2.png
     - assets/jelly.png
+    - assets/background.mp4
