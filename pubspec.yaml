@@ -30,6 +30,7 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
+    - assets/apples.png
     - assets/ocean-wave.svg
     - assets/p5.gif
     - assets/numbers.png
@@ -40,6 +41,7 @@ flutter:
     - assets/oranges.png
     - assets/p3.gif
     - assets/p9.gif
+    - assets/background.png
     - assets/audio/game-music-loop.mp3
     - assets/audio/game-correct.mp3
     - assets/audio/game-wrong.mp3
@@ -52,3 +54,12 @@ flutter:
     - assets/seahorse-2.png
     - assets/jelly.png
     - assets/background.mp4
+    - assets/carrot.png
+    - assets/fish.png
+    - assets/bird.png
+    - assets/butterfly.png
+    - assets/starfish.gif
+    - assets/fishes.gif
+    - assets/corals.gif
+    - assets/corals.jpeg
+    - assets/pearl.gif

@@ -6,6 +6,10 @@ class LanguageController extends ChangeNotifier {
   // Define translations map at the class level
   final Map<String, Map<String, String>> translations = {
     'en': {
+      "demo_game_zone": "🌊 Demo Game Zone 🌊",
+      "count_match_game": "Count Match Game",
+      "sequence_game": "Sequence Game",
+      "mermaid_game": "Mermaid Game",
       'Shell Game - Level': 'Shell Game - Level',
       'Score': 'Score',
       'Congratulations!': 'Congratulations!',
@@ -20,6 +24,10 @@ class LanguageController extends ChangeNotifier {
           'You completed all 10 levels! Great job!',
     },
     'es': {
+      "demo_game_zone": "🌊 Zona de Juegos de Demostración 🌊",
+      "count_match_game": "Juego de Conteo",
+      "sequence_game": "Juego de Secuencia",
+      "mermaid_game": "Juego de Sirena",
       'Shell Game - Level': 'Juego de Conchas - Nivel',
       'Score': 'Puntuación',
       'Congratulations!': '¡Felicidades!',

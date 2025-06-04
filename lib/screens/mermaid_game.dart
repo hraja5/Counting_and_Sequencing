@@ -4,7 +4,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:video_player/video_player.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:provider/provider.dart';
@@ -29,7 +28,6 @@ class _ShellCountingGameState extends State<ShellCountingGame> {
   int seahorsePosition = -1;
   int sharkPosition = -1;
   String question = "";
-  late VideoPlayerController _videoController;
   late AudioPlayer _audioPlayer;
   late FlutterTts _flutterTts;
   late LanguageController _languageController;
@@ -51,7 +49,6 @@ class _ShellCountingGameState extends State<ShellCountingGame> {
   Future<void> _initAll() async {
     await _initializeTTS();
     await _loadProgress();
-    _initializeVideoPlayer();
     _initializeAudioPlayer();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -72,7 +69,6 @@ class _ShellCountingGameState extends State<ShellCountingGame> {
   @override
   void dispose() {
     _languageController.removeListener(_updateQuestion);
-    _videoController.dispose();
     _audioPlayer.dispose();
     _flutterTts.stop();
     super.dispose();
@@ -130,19 +126,6 @@ class _ShellCountingGameState extends State<ShellCountingGame> {
     if (ttsQueue.isNotEmpty) {
       await _processQueue();
     }
-  }
-
-  void _initializeVideoPlayer() {
-    _videoController = VideoPlayerController.asset("assets/background.mp4")
-      ..initialize().then((_) {
-        setState(() {
-          _videoController.setVolume(0.0);
-          _videoController.setLooping(true);
-          _videoController.play();
-        });
-      }).catchError((error) {
-        debugPrint("Error initializing video: $error");
-      });
   }
 
   void _initializeAudioPlayer() {
@@ -322,105 +305,111 @@ class _ShellCountingGameState extends State<ShellCountingGame> {
         return Scaffold(
           backgroundColor: const Color(0xFF101828),
           appBar: AppBar(
-            backgroundColor: const Color(0xFF1D2333),
-            title:
-                Text(languageController.translate('Shell Game - Level $level')),
+            backgroundColor: const Color.fromARGB(255, 179, 128, 255),
+            title: Text(
+              languageController.translate('Shell Game - Level $level'),
+              style: const TextStyle(color: Colors.white),
+            ),
           ),
-          body: Stack(
-            children: [
-              if (_videoController.value.isInitialized)
+          body: SizedBox.expand(
+            child: Stack(
+              children: [
+                // Full-screen background image
                 Positioned.fill(
-                  child: FittedBox(
+                  child: Image.asset(
+                    "assets/background.png",
                     fit: BoxFit.cover,
-                    child: SizedBox(
-                      width: _videoController.value.size.width,
-                      height: _videoController.value.size.height,
-                      child: VideoPlayer(_videoController),
+                  ),
+                ),
+
+                // Foreground content
+                SafeArea(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 16),
+                        Text(
+                          languageController.translate(question),
+                          style: const TextStyle(
+                              fontSize: 20, color: Colors.white),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          languageController.translate('Score: $score'),
+                          style: const TextStyle(
+                              fontSize: 16, color: Colors.white),
+                        ),
+                        const SizedBox(height: 16),
+                        Center(
+                          child: ConstrainedBox(
+                            constraints: const BoxConstraints(maxWidth: 600),
+                            child: GridView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: gridSize,
+                                crossAxisSpacing: 8,
+                                mainAxisSpacing: 8,
+                              ),
+                              itemCount: totalShells,
+                              itemBuilder: (context, index) {
+                                final cellNumber = index + 1;
+                                return AspectRatio(
+                                  aspectRatio: 1.0,
+                                  child: GestureDetector(
+                                    onTap: isProcessingAnswer
+                                        ? null
+                                        : () => _onShellTap(cellNumber),
+                                    child: Stack(
+                                      children: [
+                                        Positioned.fill(
+                                          child: SvgPicture.asset(
+                                              'assets/shell.svg'),
+                                        ),
+                                        if (seahorsePosition == cellNumber)
+                                          Positioned.fill(
+                                            child: Align(
+                                              alignment: Alignment.center,
+                                              child: SvgPicture.asset(
+                                                  'assets/seahorse.svg'),
+                                            ),
+                                          ),
+                                        if (sharkPosition == cellNumber)
+                                          Positioned.fill(
+                                            child: Align(
+                                              alignment: Alignment.center,
+                                              child: SvgPicture.asset(
+                                                  'assets/shark.svg'),
+                                            ),
+                                          ),
+                                        if (_mermaidCurrentPosition ==
+                                            cellNumber)
+                                          Positioned.fill(
+                                            child: Align(
+                                              alignment: Alignment.center,
+                                              child: SvgPicture.asset(
+                                                  'assets/mermaid.svg'),
+                                            ),
+                                          ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        const LanguageToggleButton(),
+                        const SizedBox(height: 32),
+                      ],
                     ),
                   ),
                 ),
-              SingleChildScrollView(
-                child: Column(
-                  children: [
-                    const SizedBox(height: 16),
-                    Text(
-                      languageController.translate(question),
-                      style: const TextStyle(fontSize: 20, color: Colors.white),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      languageController.translate('Score: $score'),
-                      style: const TextStyle(fontSize: 16, color: Colors.white),
-                    ),
-                    const SizedBox(height: 16),
-                    Center(
-                      child: ConstrainedBox(
-                        constraints: const BoxConstraints(maxWidth: 600),
-                        child: GridView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: gridSize,
-                            crossAxisSpacing: 8,
-                            mainAxisSpacing: 8,
-                          ),
-                          itemCount: totalShells,
-                          itemBuilder: (context, index) {
-                            final cellNumber = index + 1;
-                            return AspectRatio(
-                              aspectRatio: 1.0,
-                              child: GestureDetector(
-                                onTap: isProcessingAnswer
-                                    ? null
-                                    : () => _onShellTap(cellNumber),
-                                child: Stack(
-                                  children: [
-                                    Positioned.fill(
-                                      child:
-                                          SvgPicture.asset('assets/shell.svg'),
-                                    ),
-                                    if (seahorsePosition == cellNumber)
-                                      Positioned.fill(
-                                        child: Align(
-                                          alignment: Alignment.center,
-                                          child: SvgPicture.asset(
-                                              'assets/seahorse.svg'),
-                                        ),
-                                      ),
-                                    if (sharkPosition == cellNumber)
-                                      Positioned.fill(
-                                        child: Align(
-                                          alignment: Alignment.center,
-                                          child: SvgPicture.asset(
-                                              'assets/shark.svg'),
-                                        ),
-                                      ),
-                                    if (_mermaidCurrentPosition == cellNumber)
-                                      Positioned.fill(
-                                        child: Align(
-                                          alignment: Alignment.center,
-                                          child: SvgPicture.asset(
-                                              'assets/mermaid.svg'),
-                                        ),
-                                      ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    const LanguageToggleButton(),
-                    const SizedBox(height: 10),
-                    const SizedBox(height: 32),
-                  ],
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         );
       },

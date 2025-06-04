@@ -5,10 +5,10 @@ import '../screens/twopage.dart';
 class CountMatchDemo extends StatefulWidget {
   const CountMatchDemo({super.key});
   @override
-  State<CountMatchDemo> createState() =>  _CountMatchDemoState();
+  State<CountMatchDemo> createState() => _CountMatchDemoState();
 }
-class _CountMatchDemoState extends State<CountMatchDemo> {
 
+class _CountMatchDemoState extends State<CountMatchDemo> {
   bool showSpanish = false;
 
   @override

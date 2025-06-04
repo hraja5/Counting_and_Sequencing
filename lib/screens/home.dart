@@ -2,8 +2,7 @@ import 'package:counting_and_sequencing/screens/shell_counting_game.dart';
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:counting_and_sequencing/analytics_engine.dart';
-
-import 'count_match.dart';
+import 'count_match_app.dart';
 import 'sequence.dart';
 import 'demo_game.dart';
 
@@ -98,7 +97,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const CountMatch()),
+                          builder: (context) => const CountMatchApp()),
                     );
                   },
                   style: ElevatedButton.styleFrom(

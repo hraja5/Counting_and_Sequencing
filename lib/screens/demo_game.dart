@@ -1,6 +1,10 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:provider/provider.dart';
+import 'package:counting_and_sequencing/utils/language_controller.dart';
+import 'package:counting_and_sequencing/widgets/language_toggle_button.dart';
+
 import 'package:counting_and_sequencing/screens/shell_counting_game.dart';
 import 'count_match_demo.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -61,6 +65,7 @@ class _DemoGameState extends State<DemoGame> with TickerProviderStateMixin {
   @override
   void dispose() {
     _controller.dispose();
+
     _waveController.dispose();
 
     _floatController.dispose();
@@ -143,6 +148,8 @@ class _DemoGameState extends State<DemoGame> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    final languageController = Provider.of<LanguageController>(context);
+
     final screenSize = MediaQuery.of(context).size;
 
     return Scaffold(
@@ -156,6 +163,20 @@ class _DemoGameState extends State<DemoGame> with TickerProviderStateMixin {
         ),
         child: Stack(
           children: [
+            Positioned(
+              top: 40,
+              left: 16,
+              child: IconButton(
+                icon: const Icon(Icons.home, color: Colors.white, size: 30),
+                onPressed: () => Navigator.pop(context),
+              ),
+            ),
+            Positioned(
+              top: 40,
+              right: 16,
+              child: const LanguageToggleButton(),
+            ),
+
             // Subtle background bubbles
             ...List.generate(12, (i) {
               final random = math.Random(i);
@@ -245,7 +266,7 @@ class _DemoGameState extends State<DemoGame> with TickerProviderStateMixin {
               child: Padding(
                 padding: const EdgeInsets.only(top: 60.0),
                 child: Text(
-                  "🌊 Demo Game Zone 🌊",
+                  languageController.translate("demo_game_zone"),
                   style: const TextStyle(
                     fontSize: 34,
                     fontWeight: FontWeight.bold,
@@ -297,7 +318,7 @@ class _DemoGameState extends State<DemoGame> with TickerProviderStateMixin {
                         width: 24,
                         height: 24,
                       ),
-                      label: "Count Match Game",
+                      label: languageController.translate("count_match_game"),
                       onPressed: () => Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -312,7 +333,7 @@ class _DemoGameState extends State<DemoGame> with TickerProviderStateMixin {
                         width: 24,
                         height: 24,
                       ),
-                      label: "Sequence Game",
+                      label: languageController.translate("sequence_game"),
                       onPressed: () => Navigator.push(
                         context,
                         MaterialPageRoute(builder: (_) => const SequenceDemo()),
@@ -326,7 +347,7 @@ class _DemoGameState extends State<DemoGame> with TickerProviderStateMixin {
                         width: 24,
                         height: 24,
                       ),
-                      label: "Mermaid Game",
+                      label: languageController.translate("mermaid_game"),
                       onPressed: () => Navigator.push(
                         context,
                         MaterialPageRoute(
